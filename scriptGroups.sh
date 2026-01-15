@@ -1,5 +1,12 @@
-
 #!/bin/bash
+
+# Define o usuário correto (com ou sem sudo)
+if [ -n "$SUDO_USER" ]; then
+    CURRENT_USER="$SUDO_USER"
+else
+    CURRENT_USER="$(whoami)"
+fi
+
 # Validação inicial
 if [ "$#" -lt 1 ]; then
     echo "Uso: $0 {list|mine|add|del} [grupos]"
@@ -11,18 +18,16 @@ shift
 
 case "$ACTION" in
     list)
-        cut -d: -f1 /etc/group
+        getent group
         ;;
     mine)
-        groups
+        groups "$CURRENT_USER"
         ;;
     add)
         if [ $# -lt 1 ]; then
             echo "Erro: indique pelo menos um grupo"
             exit 1
         fi
-
-        CURRENT_USER=$(whoami)
 
         for GROUP in "$@"; do
             if getent group "$GROUP" > /dev/null; then
@@ -39,8 +44,6 @@ case "$ACTION" in
             exit 1
         fi
 
-        CURRENT_USER=$(whoami)
-
         for GROUP in "$@"; do
             if getent group "$GROUP" > /dev/null; then
                 echo "A remover $CURRENT_USER do grupo $GROUP"
@@ -51,8 +54,7 @@ case "$ACTION" in
         done
         ;;
     *)
-        echo "Uso: ./scriptGroups.sh {list|mine|add|del} [grupos]"
+        echo "Uso: $0 {list|mine|add|del} [grupos]"
         exit 1
         ;;
-
 esac
