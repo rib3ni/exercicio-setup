@@ -7,8 +7,9 @@ else
     CURRENT_USER="$(whoami)"
 fi
 
-if [ $# -lt 1 ]; then
-    echo "Uso: ./scriptGroups.sh {list|mine|add|del} [grupos]"
+# Validação inicial
+if [ "$#" -lt 1 ]; then
+    echo "Uso: $0 {list|mine|add|del} [grupos]"
     exit 1
 fi
 
@@ -53,7 +54,7 @@ case "$ACTION" in
         done
         ;;
     *)
-        echo "Uso: ./scriptGroups.sh {list|mine|add|del} [grupos]"
+        echo "Uso: $0 {list|mine|add|del} [grupos]"
         exit 1
         ;;
 esac
