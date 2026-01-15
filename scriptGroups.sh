@@ -11,9 +11,10 @@ shift
 
 case "$ACTION" in
     list)
-
+        cut -d: -f1 /etc/group
         ;;
     mine)
+        groups
         ;;
     add)
         if [ $# -lt 1 ]; then
