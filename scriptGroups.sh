@@ -1,8 +1,8 @@
 
 #!/bin/bash
-
-if [ $# -lt 1 ]; then
-    echo "Uso: ./scriptGroups.sh {list|mine|add|del} [grupos]"
+# Validação inicial
+if [ "$#" -lt 1 ]; then
+    echo "Uso: $0 {list|mine|add|del} [grupos]"
     exit 1
 fi
 
@@ -11,6 +11,7 @@ shift
 
 case "$ACTION" in
     list)
+
         ;;
     mine)
         ;;
