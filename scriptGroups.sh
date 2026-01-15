@@ -1,5 +1,5 @@
-#!/bin/bash
 
+#!/bin/bash
 # Validação inicial
 if [ "$#" -lt 1 ]; then
     echo "Uso: $0 {list|mine|add|del} [grupos]"
@@ -11,27 +11,47 @@ shift
 
 case "$ACTION" in
     list)
-        # Listar todos os grupos existentes
-        cut -d: -f1 /etc/group
+
         ;;
     mine)
-        # Listar grupos do utilizador atual
-        groups
         ;;
-    add|del)
-        # Validação de grupos
-        if [ "$#" -lt 1 ]; then
-            echo "Erro: informe pelo menos um grupo"
-            echo "Uso: $0 $ACTION grupo1 [grupo2 ...]"
+    add)
+        if [ $# -lt 1 ]; then
+            echo "Erro: indique pelo menos um grupo"
             exit 1
         fi
 
-        for GRUPO in "$@"; do
-            echo "Operação '$ACTION' no grupo: $GRUPO"
+        CURRENT_USER=$(whoami)
+
+        for GROUP in "$@"; do
+            if getent group "$GROUP" > /dev/null; then
+                echo "A adicionar $CURRENT_USER ao grupo $GROUP"
+                usermod -aG "$GROUP" "$CURRENT_USER"
+            else
+                echo "Erro: grupo '$GROUP' não existe"
+            fi
+        done
+        ;;
+    del)
+        if [ $# -lt 1 ]; then
+            echo "Erro: indique pelo menos um grupo"
+            exit 1
+        fi
+
+        CURRENT_USER=$(whoami)
+
+        for GROUP in "$@"; do
+            if getent group "$GROUP" > /dev/null; then
+                echo "A remover $CURRENT_USER do grupo $GROUP"
+                gpasswd -d "$CURRENT_USER" "$GROUP"
+            else
+                echo "Erro: grupo '$GROUP' não existe"
+            fi
         done
         ;;
     *)
-        echo "Uso: $0 {list|mine|add|del} [grupos]"
+        echo "Uso: ./scriptGroups.sh {list|mine|add|del} [grupos]"
         exit 1
         ;;
+
 esac
