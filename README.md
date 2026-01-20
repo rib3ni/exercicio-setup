@@ -53,3 +53,6 @@ cd exercicio-setup
 chmod +x scripts/setup.sh
 
 ./scripts/setup.sh
+
+
+##ATUALIZAÇÃO DA AULA DE DEVOPS E CULTURA EM EM EQUIPA!!
